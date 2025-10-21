@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  api:
+    build: .
+    container_name: movieapi
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - moviedb:/workspace/data
+      - ./appdata:/workspace/dataset
+volumes:
+  moviedb:
