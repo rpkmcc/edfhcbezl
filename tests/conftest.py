@@ -1,13 +1,13 @@
 # tests/conftest.py
 import csv
 from pathlib import Path
+from typing import Generator
 
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
 
-# Import your mapping helpers
 from movieapi.db_tables import init_db, start_mappers
 
 
@@ -30,7 +30,7 @@ def engine():
 
 
 @pytest.fixture()
-def db_session(engine):
+def db_session(engine) -> Generator[Session, None, None]:
     """
     Fresh ORM Session per test. We use a transaction that rolls back after each test,
     keeping the schema but clearing rows.
