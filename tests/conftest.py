@@ -24,15 +24,15 @@ def engine():
         poolclass=StaticPool,
     )
     # Start classical mappings and create tables
-    start_mappers()  # ensure mappings are registered
-    init_db(eng)  # metadata.create_all(engine)
+    start_mappers()
+    init_db(eng)
     return eng
 
 
 @pytest.fixture()
 def db_session(engine) -> Generator[Session, None, None]:
     """
-    Fresh ORM Session per test. We use a transaction that rolls back after each test,
+    Fresh ORM Session per test. Uses a transaction that rolls back after each test,
     keeping the schema but clearing rows.
     """
     connection = engine.connect()

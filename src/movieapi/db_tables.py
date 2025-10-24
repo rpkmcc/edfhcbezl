@@ -1,3 +1,5 @@
+from typing import Generator
+
 from sqlalchemy import (
     CheckConstraint,
     Column,
@@ -9,7 +11,7 @@ from sqlalchemy import (
     Table,
     create_engine,
 )
-from sqlalchemy.orm import registry, relationship
+from sqlalchemy.orm import Session, registry, relationship, sessionmaker
 
 from movieapi import models
 from movieapi.constants import SQLITE_DB_FILE
@@ -89,3 +91,11 @@ def create_sql_engine(url: str = SQLITE_DB_FILE) -> Engine:
 
 def init_db(engine: Engine):
     metadata.create_all(engine)
+
+
+def get_session(session: sessionmaker[Session]) -> Generator[Session, None, None]:
+    db_session = session()
+    try:
+        yield db_session
+    finally:
+        db_session.close()

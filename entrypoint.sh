@@ -2,8 +2,16 @@
 set -euo pipefail
 
 mkdir -p /data
+echo "${DB_PATH}"
 
-python3.11 /workspace/scripts/load_data.py
+if [ -f "${DB_PATH}" ] && \
+  sqlite3 "${DB_PATH}" "SELECT EXISTS(SELECT 1 FROM movies);" | grep -q 1; then
+  echo " Database already populated — skipping seed."
+else
+  echo "Seeding database with MovieLen"
+  python3.11 /workspace/scripts/load_data.py
+  echo "Seed complete."
+fi
 
 echo "[ENTYRPOINT] Starting the Movie API server..."
 

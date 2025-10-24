@@ -3,6 +3,8 @@ FROM python:3.11-slim
 WORKDIR /workspace
 ENV PYTHONPATH=/workspace/src
 
+ENV DB_PATH=/workspace/data/movieapi.db
+
 COPY pyproject.toml entrypoint.sh ./
 COPY scripts ./scripts
 COPY src ./src

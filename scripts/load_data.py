@@ -1,20 +1,32 @@
 import csv
 import re
+from contextlib import contextmanager
+from pathlib import Path
 
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, sessionmaker
 
-from movieapi.constants import SQLITE_DB_FILE
-from movieapi.db_tables import create_sql_engine, init_db
+from movieapi.constants import MOVIES_CSV_PATH, RATINGS_CSV_PATH, SQLITE_DB_FILE
+from movieapi.db_tables import create_sql_engine, init_db, start_mappers
 from movieapi.models import Genre, Movie, Rating
 
+YEAR_RE: re.Pattern = re.compile(r"\((\d{4})\)\s*$")
 
-def create_db(db_url=SQLITE_DB_FILE) -> None:
+
+def get_session_factory(db_url=SQLITE_DB_FILE) -> sessionmaker[Session]:
+    start_mappers()
     engine = create_sql_engine(url=db_url)
     init_db(engine)
+    return sessionmaker(bind=engine)
 
 
-YEAR_RE: re.Pattern = re.compile(r"\((\d{4})\)\s*$")
+@contextmanager
+def session_scope(SessionFactory: sessionmaker[Session]):
+    db = SessionFactory()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 def extract_title_and_year(raw_title: str) -> tuple[str, int | None]:
@@ -37,8 +49,9 @@ def parse_genres(genres: str) -> list[str]:
     return genres_filtered
 
 
-def load_movies_data(session: Session, csv_path: str):
+def load_movies_data(session: Session, csv_path: Path):
     try:
+        genre_cache: dict[str, Genre] = {}
         genres_seen = set()
         with open(csv_path, newline="", encoding="utf-8") as fd:
             csv_data = csv.DictReader(fd)
@@ -54,14 +67,15 @@ def load_movies_data(session: Session, csv_path: str):
                 session.flush()
 
                 genres = row.get("genres")
-                genres_filtered = parse_genres(genres)
-                for name in genres_filtered:
-                    if name not in genres_seen:
+                for name in parse_genres(genres):
+                    genre = genre_cache.get(name)
+                    if genre is None:
                         genre = Genre(name)
+                        genre_cache[name] = genre
                         session.add(genre)
                         session.flush()
-                        movie.genres.append(genre)
-                        genres_seen.add(name)
+
+                    movie.genres.append(genre)
 
                 if i % 2000 == 0:
                     session.commit()
@@ -77,7 +91,7 @@ def get_movie_id_to_pk(session: Session) -> dict[int, int]:
     return {movie_id: pk for (movie_id, pk) in rows}
 
 
-def load_ratings_data(session: Session, csv_path: str):
+def load_ratings_data(session: Session, csv_path: Path):
     movie_id_to_pk = get_movie_id_to_pk(session)
 
     with csv_path.open(newline="", encoding="utf-8") as fd:
@@ -96,4 +110,8 @@ def load_ratings_data(session: Session, csv_path: str):
 
 
 if __name__ == "__main__":
-    create_db()
+    Sess: sessionmaker[Session] = get_session_factory()
+
+    with session_scope(Sess) as db:
+        load_movies_data(db, MOVIES_CSV_PATH)
+        load_ratings_data(db, RATINGS_CSV_PATH)
