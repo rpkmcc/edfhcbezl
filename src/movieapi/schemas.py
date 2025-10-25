@@ -9,11 +9,15 @@ class PageMeta(BaseModel):
     total: int
 
 
+class GenreOut(BaseModel):
+    name: str
+
+
 class MovieOut(BaseModel):
-    id: int
+    movie_id: int
     title: str
-    year: Optional[int] = None
-    genres: Optional[list[str]] = None
+    year: int
+    genres: Optional[list[GenreOut]] = None
     rating: Optional[float] = None
 
 

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 mkdir -p /data
-echo "${DB_PATH}"
+echo "DB path - ${DB_PATH}"
 
 if [ -f "${DB_PATH}" ] && \
   sqlite3 "${DB_PATH}" "SELECT EXISTS(SELECT 1 FROM movies);" | grep -q 1; then

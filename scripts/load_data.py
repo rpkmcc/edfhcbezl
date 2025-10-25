@@ -52,7 +52,6 @@ def parse_genres(genres: str) -> list[str]:
 def load_movies_data(session: Session, csv_path: Path):
     try:
         genre_cache: dict[str, Genre] = {}
-        genres_seen = set()
         with open(csv_path, newline="", encoding="utf-8") as fd:
             csv_data = csv.DictReader(fd)
 

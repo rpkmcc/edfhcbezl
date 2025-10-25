@@ -7,7 +7,7 @@ metadata = mapper_registry.metadata
 
 class Movie:
     def __init__(self, movie_id: int, title: str, year: int):
-        self.movie_id = movie_id
+        self.movie_id: int = movie_id
         self.title: str = title
         self.year: int = year
 
