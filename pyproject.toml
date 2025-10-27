@@ -22,7 +22,8 @@ dev = [
     "ruff",
     "mypy",
     "tox",
-    "commitizen"
+    "commitizen",
+    "requests"
 ]
 
 [tool.setuptools.packages.find]
@@ -38,6 +39,7 @@ line-length = 120
 pythonpath = ["src"]
 addopts = "--strict-markers -ra"
 testpaths = ["tests"]
+markers = ["e2e: marks tests as end-to-end (requires the real API server)"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
 python_classes = ["Test"]
