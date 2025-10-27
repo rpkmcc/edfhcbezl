@@ -6,10 +6,6 @@ from movieapi import models
 from scripts.load_data import load_movies_data, load_ratings_data
 
 
-def test_year_title_extraction():
-    pass
-
-
 def test_movie_ingestion(db_session, tmp_movielens: dict[str, Path]):
     csv_path = tmp_movielens.get("MOVIES_CSV")
     expected_genres = {"adventure", "animation", "children", "comedy", "fantasy"}
@@ -17,7 +13,7 @@ def test_movie_ingestion(db_session, tmp_movielens: dict[str, Path]):
     load_movies_data(db_session, csv_path)
 
     movies = db_session.scalars(select(models.Movie).order_by(models.Movie.movie_id)).all()
-    assert [m.movie_id for m in movies] == [1, 2, 3]
+    assert [m.movie_id for m in movies] == [1, 2, 3, 201, 202, 203, 204]
     assert movies[0].title == "Toy Story"
 
     toy_story = movies[0]

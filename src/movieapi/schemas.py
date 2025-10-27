@@ -11,7 +11,7 @@ class MovieOut(BaseModel):
     movie_id: int
     title: str
     year: int
-    genres: Optional[list[GenreOut]] = None
+    genres: Optional[list[GenreOut] | list[str]] = None
     rating: Optional[float] = None
 
 

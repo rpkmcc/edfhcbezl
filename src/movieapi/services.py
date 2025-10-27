@@ -52,9 +52,9 @@ def parse_movies_query(text: str, genres: list[str]) -> dict:
 def get_movies(session: Session, query: str, limit=10) -> dict:
     genres = get_genres(session)
     parsed = parse_movies_query(query, genres)
-    wanted_genre = parsed.get("genre")  # e.g. "drama" (already lowercase)
-    wanted_year = parsed.get("year")  # e.g. 1999 or None
-    rating = parsed.get("rating")  # e.g. 4.0 or None
+    wanted_genre = parsed.get("genre")
+    wanted_year = parsed.get("year")
+    rating = parsed.get("rating")
     recommend = parsed.get("intent")
 
     # One row per movie: (movie_id, avg_rating)
