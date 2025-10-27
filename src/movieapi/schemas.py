@@ -3,12 +3,6 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class PageMeta(BaseModel):
-    page: int
-    page_size: int
-    total: int
-
-
 class GenreOut(BaseModel):
     name: str
 
@@ -21,6 +15,18 @@ class MovieOut(BaseModel):
     rating: Optional[float] = None
 
 
-class MovieListOut(BaseModel):
-    meta: PageMeta
-    items: list[MovieOut]
+# --- shows how the text query was parsed ---
+class ParsedQuery(BaseModel):
+    intent: str
+    genre: Optional[str] = None
+    year: Optional[int] = None
+    title: Optional[str] = None
+    rating: Optional[float] = None
+
+
+# --- full response model for /movies/search ---
+class MovieSearchResponse(BaseModel):
+    query: str
+    limit: int
+    parsed: ParsedQuery
+    results: list[MovieOut]

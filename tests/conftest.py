@@ -57,11 +57,24 @@ def tmp_movielens(tmp_path: Path) -> dict[str, Path]:
         {"movieId": "1", "title": "Toy Story (1995)", "genres": "Adventure|Animation|Children|Comedy|Fantasy"},
         {"movieId": "2", "title": "Jumanji (1995)", "genres": "Adventure|Children|Fantasy"},
         {"movieId": "3", "title": "Grumpier Old Men (1995)", "genres": "Comedy|Romance"},
+        {"movieId": "201", "title": "The Dark Knight (2008)", "genres": "Action|Crime|Drama|Thriller"},
+        {"movieId": "202", "title": "Inception (2010)", "genres": "Action|Adventure|Sci-Fi|Thriller"},
+        {"movieId": "203", "title": "The Hangover (2009)", "genres": "Comedy"},
+        {"movieId": "204", "title": "Gladiator (2000)", "genres": "Action|Adventure|Drama"},
     ]
+
     ratings = [
         {"userId": "10", "movieId": "1", "rating": "4.5", "timestamp": "1112486027"},
         {"userId": "11", "movieId": "1", "rating": "5.0", "timestamp": "1112484676"},
         {"userId": "12", "movieId": "2", "rating": "3.0", "timestamp": "1112484819"},
+        {"userId": "1", "movieId": "201", "rating": "4.9", "timestamp": "1010"},
+        {"userId": "2", "movieId": "201", "rating": "4.8", "timestamp": "1011"},
+        {"userId": "3", "movieId": "202", "rating": "4.8", "timestamp": "1012"},
+        {"userId": "4", "movieId": "202", "rating": "4.7", "timestamp": "1013"},
+        {"userId": "5", "movieId": "203", "rating": "4.3", "timestamp": "1014"},
+        {"userId": "6", "movieId": "203", "rating": "4.2", "timestamp": "1015"},
+        {"userId": "7", "movieId": "204", "rating": "4.6", "timestamp": "1016"},
+        {"userId": "8", "movieId": "204", "rating": "4.7", "timestamp": "1017"},
     ]
 
     movies_csv = tmp_path / "movies.csv"
