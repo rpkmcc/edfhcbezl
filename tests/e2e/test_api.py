@@ -3,7 +3,7 @@ import requests
 
 from movieapi.constants import BASE_URL
 
-pytest.mark.e2e
+pytestmark = pytest.mark.e2e
 
 
 @pytest.fixture()
